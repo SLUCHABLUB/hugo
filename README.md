@@ -2,23 +2,38 @@
 
 Hugo is a blinkmojt (blinking gizmo) located above the door to Schäraton in IDét.
 
-Hugo is prunounced \[/y.go/] (y’gå).
+"Hugo" is pronounced [ʏˈgoː] (y'gå).
 
-## libhugo
+## Programmes
 
-A wrapper library for [WiringPi Library](https://github.com/WiringPi/WiringPi)
-that gives a reasonable API for working with this specific screen.
+## `lib.rs`
 
-## life
+A library for writing to Hugo's screen.
+Currently, it uses [`rppal`](https://crates.io/crates/rppal) to write to the GPIO pins.
 
-Runs game of life. Once the state stabalizes it will re-populate the screen
-with cells and continue running.
+## Conway's game of life - `life.rs`
 
-## radar
+Runs Conway's game of life.
+Once the state stabilises it will re-populate the screen with cells and continue running.
+
+## Radar - `radar.rs`
 
 Draws a sweeping wave that bounces on the left and right side of the screen.
 The wave randomly spawns dots in it's wake that slowly fade away.
 
-## udp
+## Message Service - `udp.rs`
 
-Listens on a given port (1337 currently) for images and displays them on the screen.
+Listens on a port (default is 1337) for images and displays them on the screen.
+
+## Environment Variables
+
+Hugo uses a set of environment variables for configuration.
+If their values are invalid, the programmes will crash on startup.
+
+| Variable        | Programmes | Type                   | Usage | Default |
+| --------------- | ---------- | ---------------------- | ----- | ------- |
+| HUGO_BUSY_WAIT  | All        | 32-bit* natural number |       |         |
+| HUGO_CLOCK_WAIT | All        | 32-bit* natural number |       |         |
+| 
+
+*pointer sized.
