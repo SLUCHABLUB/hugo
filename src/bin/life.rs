@@ -1,4 +1,4 @@
-use hugo::{HEIGHT, HUGO, Image, Pixel, WIDTH};
+use hugo::{HUGO, Image, Pixel};
 use rand::random;
 use std::hash::{DefaultHasher, Hash, Hasher};
 
