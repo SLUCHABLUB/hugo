@@ -33,8 +33,8 @@ where
         self.rows
     }
 
-    pub fn get(self, x: usize, y: usize) -> P {
-        self.rows[y][x]
+    pub fn get(self, x: usize, y: usize) -> Option<P> {
+        self.rows.get(y).copied()?.get(x).copied()
     }
 
     pub fn pixel_coordinates(self) -> impl Iterator<Item = ([usize; 2], P)> {

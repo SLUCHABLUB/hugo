@@ -32,11 +32,7 @@ fn neighbour_count(simulation: Image, x: usize, y: usize) -> usize {
             continue;
         };
 
-        if neighbour_x >= WIDTH || neighbour_y >= HEIGHT {
-            continue;
-        }
-
-        if simulation.get(neighbour_x, neighbour_y) == ALIVE {
+        if simulation.get(neighbour_x, neighbour_y) == Some(ALIVE) {
             count += 1;
         }
     }
@@ -65,7 +61,7 @@ fn evolve(current_generation: Image) -> Image {
     next_generation
 }
 
-fn detect_loop(
+fn is_looping(
     simulation: Image,
     hash_head: &mut usize,
     hashes: &mut [u64; MAXIMUM_LOOP_LENGTH],
@@ -111,6 +107,8 @@ fn main() {
 
         if restart_after == Some(0) {
             simulation = random();
+            hashes.fill(0);
+
             restart_after = None;
         }
 
@@ -119,7 +117,7 @@ fn main() {
         if evolve_after == 0 {
             simulation = evolve(simulation);
 
-            if detect_loop(simulation, &mut hash_head, &mut hashes) {
+            if restart_after.is_none() && is_looping(simulation, &mut hash_head, &mut hashes) {
                 restart_after = Some(PAUSE_FRAMES);
             }
 

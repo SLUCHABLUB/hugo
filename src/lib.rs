@@ -10,10 +10,9 @@ pub use pixel::Pixel;
 use rppal::gpio::{Gpio, Level, OutputPin};
 use std::env::{VarError, var};
 use std::error::Error;
+use std::hint::black_box;
 use std::process::exit;
 use std::sync::{LazyLock, Mutex};
-use std::thread;
-use std::time::Duration;
 
 const SHIFT_PIN_NUMBER: u8 = 16;
 const CLEAR_PIN_NUMBER: u8 = 20;
@@ -93,11 +92,17 @@ impl Hugo {
     }
 
     fn clock_wait(&mut self) {
-        thread::sleep(Duration::from_micros(self.clock_wait_loops as u64));
+        let mut n = self.clock_wait_loops;
+        while n > 0 {
+            n -= black_box(1);
+        }
     }
 
     fn busy_wait(&mut self) {
-        thread::sleep(Duration::from_micros(self.busy_wait_loops as u64));
+        let mut n = self.busy_wait_loops;
+        while n > 0 {
+            n -= black_box(1);
+        }
     }
 
     pub fn set_busy_wait(&mut self, loops: usize) {
