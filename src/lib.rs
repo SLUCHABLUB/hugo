@@ -75,16 +75,14 @@ impl Hugo {
     }
 
     fn clock_wait(&mut self) {
-        let mut n = CLOCK_WAIT_CYCLES;
-        while n > 0 {
-            n -= black_box(1);
+        for iteration in 0..CLOCK_WAIT_CYCLES {
+            black_box(iteration);
         }
     }
 
     fn busy_wait(&mut self) {
-        let mut n = BUSY_WAIT_CYCLES;
-        while n > 0 {
-            n -= black_box(1);
+        for iteration in 0..BUSY_WAIT_CYCLES {
+            black_box(iteration);
         }
     }
 
