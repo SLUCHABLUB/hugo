@@ -24,16 +24,3 @@ The wave randomly spawns dots in it's wake that slowly fade away.
 ## Message Service - `udp.rs`
 
 Listens on a port (default is 1337) for images and displays them on the screen.
-
-## Environment Variables
-
-Hugo uses a set of environment variables for configuration.
-If their values are invalid, the programmes will crash on startup.
-
-| Variable        | Programmes | Type                   | Usage | Default |
-| --------------- | ---------- | ---------------------- | ----- | ------- |
-| HUGO_BUSY_WAIT  | All        | 32-bit* natural number |       |         |
-| HUGO_CLOCK_WAIT | All        | 32-bit* natural number |       |         |
-| 
-
-*pointer sized.

@@ -8,7 +8,6 @@ pub use image::Image;
 pub use pixel::Pixel;
 
 use rppal::gpio::{Gpio, Level, OutputPin};
-use std::env::{VarError, var};
 use std::error::Error;
 use std::hint::black_box;
 use std::process::exit;
@@ -20,8 +19,8 @@ const COLUMN_PIN_NUMBER: u8 = 21;
 
 const ROW_PIN_NUMBERS: [u8; HEIGHT] = [18, 23, 24, 25, 8, 7, 12];
 
-const DEFAULT_BUSY_WAIT: usize = 20000;
-const DEFAULT_CLOCK_WAIT: usize = 100;
+const BUSY_WAIT_CYCLES: usize = 20000;
+const CLOCK_WAIT_CYCLES: usize = 100;
 
 pub const WIDTH: usize = 95;
 pub const HEIGHT: usize = 7;
@@ -41,9 +40,6 @@ pub static HUGO: LazyLock<Mutex<Hugo>> = LazyLock::new(|| {
 ///
 /// There *should* only ever be one instance ant it can be found in [`HUGO`].
 pub struct Hugo {
-    busy_wait_loops: usize,
-    clock_wait_loops: usize,
-
     shift: OutputPin,
     clear: OutputPin,
     column: OutputPin,
@@ -53,17 +49,6 @@ pub struct Hugo {
 impl Hugo {
     /// Initializes Hugo. Should only be ran once.
     fn new() -> Result<Hugo, Box<dyn Error>> {
-        let read_environment_variable = |name, default| match var(name) {
-            Ok(variable) => variable.parse().map_err(|error| {
-                format!("parsing the environment variable `{name}` (={variable:?}): {error}")
-            }),
-            Err(VarError::NotPresent) => Ok(default),
-            Err(error) => Err(format!("reading `{name}`: {error}")),
-        };
-
-        let busy_wait_loops = read_environment_variable("HUGO_BUSY_WAIT", DEFAULT_BUSY_WAIT)?;
-        let clock_wait_loops = read_environment_variable("HUGO_CLOCK_WAIT", DEFAULT_CLOCK_WAIT)?;
-
         let gpio = Gpio::new()?;
 
         let mut shift = gpio.get(SHIFT_PIN_NUMBER)?.into_output();
@@ -82,8 +67,6 @@ impl Hugo {
         })?;
 
         Ok(Hugo {
-            busy_wait_loops,
-            clock_wait_loops,
             shift,
             clear,
             column,
@@ -92,21 +75,17 @@ impl Hugo {
     }
 
     fn clock_wait(&mut self) {
-        let mut n = self.clock_wait_loops;
+        let mut n = CLOCK_WAIT_CYCLES;
         while n > 0 {
             n -= black_box(1);
         }
     }
 
     fn busy_wait(&mut self) {
-        let mut n = self.busy_wait_loops;
+        let mut n = BUSY_WAIT_CYCLES;
         while n > 0 {
             n -= black_box(1);
         }
-    }
-
-    pub fn set_busy_wait(&mut self, loops: usize) {
-        self.busy_wait_loops = loops;
     }
 
     pub fn draw_image(&mut self, image: Image) {
