@@ -1,0 +1,4 @@
+- Translate `udp.c`.
+- Create an api to allow switching programmes at runtime.
+- Create a web protocol to replace bytes over udp (tcp, http).
+  - Allow switching programmes using the web protocol.

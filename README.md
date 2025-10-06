@@ -23,4 +23,6 @@ The wave randomly spawns dots in it's wake that slowly fade away.
 
 ## Message Service - `udp.rs`
 
+> Under construction.
+
 Listens on a port (default is 1337) for images and displays them on the screen.
