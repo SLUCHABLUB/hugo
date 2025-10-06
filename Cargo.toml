@@ -19,3 +19,7 @@ rppal = "0.22.1"
 version = "0.9.2"
 default-features = false
 features = ["thread_rng"]
+
+[lints.clippy]
+all = "deny"
+pedantic = "deny"

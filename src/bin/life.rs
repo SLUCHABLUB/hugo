@@ -9,7 +9,7 @@ const MAXIMUM_LOOP_LENGTH: usize = 280;
 const DEAD: Pixel = Pixel::Off;
 const ALIVE: Pixel = Pixel::On;
 
-fn neighbour_count(simulation: Image, x: usize, y: usize) -> usize {
+fn neighbour_count(simulation: &Image, x: usize, y: usize) -> usize {
     #[rustfmt::skip]
     const OFFSETS: [[isize; 2]; 8] = [
         [-1, -1],
@@ -40,7 +40,7 @@ fn neighbour_count(simulation: Image, x: usize, y: usize) -> usize {
     count
 }
 
-fn evolve(current_generation: Image) -> Image {
+fn evolve(current_generation: &Image) -> Image {
     let mut next_generation = Image::default();
 
     for ([x, y], cell) in current_generation.pixel_coordinates() {
@@ -55,22 +55,22 @@ fn evolve(current_generation: Image) -> Image {
             },
         };
 
-        next_generation.set(x, y, new_cell)
+        next_generation.set(x, y, new_cell);
     }
 
     next_generation
 }
 
 fn is_looping(
-    simulation: Image,
+    simulation: &Image,
     hash_head: &mut usize,
     hashes: &mut [u64; MAXIMUM_LOOP_LENGTH],
 ) -> bool {
-    let mut hasher = DefaultHasher::new();
+    let mut state = DefaultHasher::new();
 
-    simulation.hash(&mut hasher);
+    simulation.hash(&mut state);
 
-    let hash = hasher.finish();
+    let hash = state.finish();
 
     if hashes.contains(&hash) {
         return true;
@@ -115,9 +115,9 @@ fn main() {
         evolve_after -= 1;
 
         if evolve_after == 0 {
-            simulation = evolve(simulation);
+            simulation = evolve(&simulation);
 
-            if restart_after.is_none() && is_looping(simulation, &mut hash_head, &mut hashes) {
+            if restart_after.is_none() && is_looping(&simulation, &mut hash_head, &mut hashes) {
                 restart_after = Some(PAUSE_FRAMES);
             }
 

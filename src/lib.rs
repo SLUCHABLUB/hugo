@@ -74,13 +74,13 @@ impl Hugo {
         })
     }
 
-    fn clock_wait(&mut self) {
+    fn clock_wait() {
         for iteration in 0..CLOCK_WAIT_CYCLES {
             black_box(iteration);
         }
     }
 
-    fn busy_wait(&mut self) {
+    fn busy_wait() {
         for iteration in 0..BUSY_WAIT_CYCLES {
             black_box(iteration);
         }
@@ -91,19 +91,19 @@ impl Hugo {
             for pixel in *row {
                 self.column.write(pixel.level());
 
-                self.clock_wait();
+                Self::clock_wait();
 
                 self.shift.set_high();
-                self.clock_wait();
+                Self::clock_wait();
                 self.shift.set_low();
             }
 
             self.rows[y].set_high();
-            self.busy_wait();
+            Self::busy_wait();
             self.rows[y].set_low();
 
             self.clear.set_low();
-            self.clock_wait();
+            Self::clock_wait();
             self.clear.set_high();
         }
     }

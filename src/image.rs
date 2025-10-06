@@ -38,15 +38,11 @@ where
     }
 
     pub fn pixel_coordinates(self) -> impl Iterator<Item = ([usize; 2], P)> {
-        self.rows
-            .into_iter()
-            .enumerate()
-            .map(|(y, row)| {
-                row.into_iter()
-                    .enumerate()
-                    .map(move |(x, pixel)| ([x, y], pixel))
-            })
-            .flatten()
+        self.rows.into_iter().enumerate().flat_map(|(y, row)| {
+            row.into_iter()
+                .enumerate()
+                .map(move |(x, pixel)| ([x, y], pixel))
+        })
     }
 }
 
