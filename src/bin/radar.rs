@@ -11,9 +11,9 @@ const MAX_LEVEL: Level = 60;
 fn level_to_pixel(cycle_index: u8) -> impl Fn(Level) -> Pixel {
     move |level| {
         if level > cycle_index {
-            Pixel::Off
-        } else {
             Pixel::On
+        } else {
+            Pixel::Off
         }
     }
 }
@@ -45,6 +45,8 @@ fn main() {
         image = image.map(|level| level.saturating_sub(1));
 
         for y in 0..HEIGHT {
+            image.set(scan_position, y, LEVELS);
+
             if random_bool(0.005) {
                 image.set(scan_position, y, MAX_LEVEL);
             }
