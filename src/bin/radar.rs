@@ -1,4 +1,4 @@
-use hugo::{Image, Programme, HUGO};
+use hugo::{HUGO, Image, Programme};
 
 fn main() {
     Programme::from_name("radar", Image::default())
