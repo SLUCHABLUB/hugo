@@ -14,6 +14,7 @@ pub enum Pixel {
 }
 
 impl Pixel {
+    #[must_use]
     pub fn on(on: bool) -> Pixel {
         if on { Pixel::On } else { Pixel::Off }
     }
@@ -41,7 +42,7 @@ impl<'de> Deserialize<'de> for Pixel {
     where
         D: serde::Deserializer<'de>,
     {
-        let expected = r#""on", "off", "red", "black", 1, 0, true or false"#;
+        const EXPECTED: &str = r#""on", "off", "red", "black", 1, 0, true or false"#;
 
         #[derive(Deserialize)]
         #[serde(untagged)]
@@ -61,7 +62,7 @@ impl<'de> Deserialize<'de> for Pixel {
                     other => {
                         return Err(<D::Error as Error>::invalid_value(
                             Unexpected::Other(other),
-                            &expected,
+                            &EXPECTED,
                         ));
                     }
                 },

@@ -9,14 +9,14 @@ name = "life"
 [[bin]]
 name = "radar"
 
-[[bin]]
-name = "udp"
-
 [dependencies]
 rppal = "0.22.1"
-serde = { version = "1.0.228", features = ["derive"] }
 serde_arrays = "0.2.0"
 toml = "0.9.7"
+
+[dependencies.serde]
+version = "1.0.228"
+features = ["derive"]
 
 [dependencies.rand]
 version = "0.9.2"

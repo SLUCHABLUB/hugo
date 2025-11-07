@@ -3,9 +3,11 @@
 
 mod image;
 mod pixel;
+mod programme;
 
 pub use image::Image;
 pub use pixel::Pixel;
+pub use programme::Programme;
 
 use rppal::gpio::{Gpio, Level, OutputPin};
 use std::error::Error;

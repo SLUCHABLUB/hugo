@@ -2,8 +2,8 @@ use crate::{HEIGHT, Pixel, WIDTH};
 use rand::Rng;
 use rand::distr::{Distribution, StandardUniform};
 use serde::Deserialize;
-use std::borrow::Cow;
 use std::array::from_fn;
+use std::borrow::Cow;
 
 /// An image that can be displayed on Hugo's screen.
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
@@ -74,7 +74,8 @@ impl Distribution<Image> for StandardUniform {
 impl<'de> Deserialize<'de> for Image {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
-        D: serde::Deserializer<'de> {
+        D: serde::Deserializer<'de>,
+    {
         #[derive(Deserialize)]
         #[serde(untagged)]
         enum Representation<'data> {
@@ -92,12 +93,16 @@ impl<'de> Deserialize<'de> for Image {
             pixels: [Pixel; WIDTH],
         }
 
-        Representation::deserialize(deserializer).and_then(|representation| Ok(match representation {
-            Representation::Pixels(pixels) => Image {
-                rows: from_fn(|y| from_fn(|x| pixels[y * WIDTH + x]))
-            },
-            Representation::Rows(rows) => Image { rows: rows.map(|row| row.pixels) },
-            Representation::Text(text) => todo!("render the text: {text:?}"),
-        }))
+        Representation::deserialize(deserializer).and_then(|representation| {
+            Ok(match representation {
+                Representation::Pixels(pixels) => Image {
+                    rows: from_fn(|y| from_fn(|x| pixels[y * WIDTH + x])),
+                },
+                Representation::Rows(rows) => Image {
+                    rows: rows.map(|row| row.pixels),
+                },
+                Representation::Text(text) => todo!("render the text: {text:?}"),
+            })
+        })
     }
 }
